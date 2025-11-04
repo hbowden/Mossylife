@@ -1,0 +1,16 @@
+{
+  "name": "qf-review-analytics-lambda",
+  "version": "1.0.0",
+  "description": "Analytics tracking Lambda for Quantum Fiber Review",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.645.0",
+    "@aws-sdk/lib-dynamodb": "^3.645.0"
+  },
+  "keywords": ["analytics", "lambda", "dynamodb"],
+  "author": "",
+  "license": "MIT"
+}

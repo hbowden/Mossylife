@@ -1,0 +1,26 @@
+# robots.txt for Mossy Life - Quantum Fiber Review
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://mossylife.com/sitemap.xml
+
+# Block analytics endpoints (not needed, but good practice)
+Disallow: /track
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Crawl delay (optional, only if you get hammered)
+# Crawl-delay: 1

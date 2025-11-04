@@ -1,0 +1,521 @@
+/* Mossy Life - PNW Forest Theme */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Mossy Forest Colors */
+    --forest-dark: #1a4d2e;
+    --forest-med: #2d5016;
+    --moss-green: #52b788;
+    --moss-light: #90be6d;
+    --earth-brown: #8b5a3c;
+    --mushroom: #dda15e;
+    --cream: #fef9ef;
+    --fog: #d8e2dc;
+    --sky: #4ea8de;
+    --bark: #6d4c3d;
+    
+    /* Functional Colors */
+    --primary: var(--moss-green);
+    --secondary: var(--forest-dark);
+    --accent: var(--mushroom);
+    --success: var(--moss-light);
+    --warning: #f4a261;
+    --text: #2d3a2e;
+    --text-light: #5a6c57;
+    --bg: var(--cream);
+    --bg-light: #f8f6f0;
+    --border: #c9d5c0;
+}
+
+body {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: .25rem 1.5rem;
+}
+
+/* Playful Header with Forest Theme */
+header {
+    color: var(--moss-green);
+    padding: 3rem 0 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+/* Subtle tree silhouettes in header */
+header::before {
+    content: '🌲';
+    position: absolute;
+    bottom: 10px;
+    left: 5%;
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+header::after {
+    content: '🌲 🌲';
+    position: absolute;
+    bottom: 10px;
+    right: 5%;
+    font-size: 1.5rem;
+    opacity: 0.25;
+}
+
+h1 {
+    font-family: 'Fredoka', 'Quicksand', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* h1 a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+} */
+
+h1 a:hover {
+    color: var(--moss-light);
+}
+
+.subtitle {
+    font-size: 1.125rem;
+    opacity: 0.95;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+}
+
+/* Typography with organic feel */
+h2 {
+    font-family: 'Fredoka', 'Quicksand', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 2.5rem 0 1rem;
+    color: var(--forest-dark);
+    line-height: 1.3;
+    position: relative;
+    padding-left: 1rem;
+}
+
+h2::before {
+    content: '🌿';
+    position: absolute;
+    left: -0.5rem;
+    opacity: 0.6;
+}
+
+h3 {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+    color: var(--forest-med);
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: var(--forest-med);
+}
+
+p {
+    margin-bottom: 1.25rem;
+    color: var(--text);
+    font-size: 1.0625rem;
+}
+
+strong {
+    font-weight: 600;
+    color: var(--forest-dark);
+}
+
+/* Playful CTA Buttons */
+.cta-button {
+    display: inline-block;
+    background: var(--moss-green);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(82, 183, 136, 0.3);
+    text-align: center;
+    border: 3px solid transparent;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(82, 183, 136, 0.4);
+    background: var(--moss-light);
+    border-color: var(--forest-dark);
+}
+
+.cta-box {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 3px solid var(--moss-green);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+.cta-box::before {
+    content: '🍄';
+    position: absolute;
+    top: -15px;
+    left: 20px;
+    font-size: 1.5rem;
+}
+
+/* Content Boxes with organic shapes */
+.highlight-box {
+    background: var(--bg-light);
+    border-left: 6px solid var(--moss-green);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.warning-box {
+    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+    border-left: 6px solid var(--warning);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    position: relative;
+}
+
+.warning-box::before {
+    content: '⚠️';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.25rem;
+    opacity: 0.5;
+}
+
+/* Stats Grid with playful cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--cream) 0%, var(--fog) 100%);
+    border: 2px solid var(--border);
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px) rotate(1deg);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    border-color: var(--moss-green);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--moss-green);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* Lists with tree bullet points */
+ul, ol {
+    margin: 1.25rem 0 1.25rem 2rem;
+    color: var(--text);
+}
+
+li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+/* Pro/Con Grid with organic styling */
+.pro-con-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.pros, .cons {
+    background: var(--bg-light);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+
+.pros:hover, .cons:hover {
+    transform: translateY(-5px);
+}
+
+.pros {
+    border-top: 6px solid var(--moss-light);
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.cons {
+    border-top: 6px solid var(--warning);
+    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+}
+
+.pros h3 {
+    color: var(--forest-dark);
+    margin-top: 0;
+}
+
+.pros h3::before {
+    content: '✅ ';
+}
+
+.cons h3 {
+    color: var(--earth-brown);
+    margin-top: 0;
+}
+
+.cons h3::before {
+    content: '⚠️ ';
+}
+
+.pros ul, .cons ul {
+    margin-left: 0;
+    list-style: none;
+}
+
+.pros li::before {
+    content: "🌲 ";
+    margin-right: 0.5rem;
+}
+
+.cons li::before {
+    content: "🍂 ";
+    margin-right: 0.5rem;
+}
+
+/* Images with organic borders */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Code blocks with earthy tone */
+code {
+    background: var(--fog);
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--forest-dark);
+    border: 1px solid var(--border);
+}
+
+/* Links with forest colors */
+a {
+    color: var(--moss-green);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+a:hover {
+    color: var(--forest-dark);
+    text-decoration: underline;
+}
+
+/* Footer with forest floor feel */
+footer {
+    background: linear-gradient(180deg, var(--forest-med) 0%, var(--forest-dark) 100%);
+    color: rgba(255,255,255,0.9);
+    padding: 2.5rem 0;
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 0.875rem;
+    position: relative;
+    border-top: 4px solid var(--moss-green);
+}
+
+footer::before {
+    content: '🌿 🍄 🌲';
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    opacity: 0.6;
+}
+
+footer p {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 0.5rem;
+}
+
+/* Main Content */
+main {
+    padding: 3rem 0;
+}
+
+article {
+    font-size: 1.0625rem;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* Blog Post Cards (for home page) */
+.post-card {
+    background: white;
+    border: 3px solid var(--border);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    border-color: var(--moss-green);
+}
+
+.post-card h3 {
+    margin: 0 0 1rem;
+}
+
+.post-card h3 a {
+    color: var(--forest-dark);
+    text-decoration: none;
+}
+
+.post-card h3 a:hover {
+    color: var(--moss-green);
+}
+
+.post-excerpt {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.post-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.9375rem;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--text-light);
+}
+
+.empty-state::before {
+    content: '🌱';
+    display: block;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pro-con-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    article {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    article {
+        padding: 1.25rem;
+        border-radius: 1.5rem;
+    }
+}
+
+/* Fun loading animation for images */
+img {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Add subtle texture to body */
+body {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(82, 183, 136, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(144, 190, 109, 0.03) 0%, transparent 50%);
+}
