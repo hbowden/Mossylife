@@ -7,7 +7,7 @@ const docClient = DynamoDBDocumentClient.from(client);
 
 const TABLE_NAME = process.env.DYNAMODB_TABLE;
 
-// Hash IP + User Agent for privacy-friendly unique visitor tracking
+// Hash IP + User Agent for unique visitor tracking (daily reset)
 function hashVisitor(ip, userAgent) {
   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   return crypto
@@ -17,15 +17,52 @@ function hashVisitor(ip, userAgent) {
     .substring(0, 16);
 }
 
+// Extract detailed visitor information
+function getVisitorInfo(event) {
+  const headers = event.headers || {};
+  return {
+    ip: event.requestContext?.identity?.sourceIp || 'unknown',
+    userAgent: event.requestContext?.identity?.userAgent || 'unknown',
+    language: headers['accept-language'] || headers['Accept-Language'] || 'unknown',
+    referer: headers.referer || headers.Referer || 'direct',
+    country: headers['cloudfront-viewer-country'] || headers['CloudFront-Viewer-Country'] || 'unknown',
+    deviceType: headers['cloudfront-is-mobile-viewer'] === 'true' ? 'mobile' : 
+                headers['cloudfront-is-tablet-viewer'] === 'true' ? 'tablet' : 
+                headers['cloudfront-is-desktop-viewer'] === 'true' ? 'desktop' : 'unknown'
+  };
+}
+
 // Get current date in YYYY-MM-DD format
 function getDateKey() {
   return new Date().toISOString().split('T')[0];
 }
 
 // Track page view
-async function trackPageView(data) {
+async function trackPageView(data, visitorInfo) {
   const dateKey = getDateKey();
   const timestamp = new Date().toISOString();
+  
+  // Store detailed page view with full visitor data
+  const pageViewId = crypto.randomBytes(8).toString('hex');
+  await docClient.send(new PutCommand({
+    TableName: TABLE_NAME,
+    Item: {
+      pk: 'PAGEVIEW',
+      sk: `VIEW#${timestamp}#${pageViewId}`,
+      date: dateKey,
+      timestamp,
+      page: data.page || '/',
+      referrer: data.referrer || 'direct',
+      // Full visitor data
+      ip: visitorInfo.ip,
+      userAgent: visitorInfo.userAgent,
+      language: visitorInfo.language,
+      country: visitorInfo.country,
+      deviceType: visitorInfo.deviceType,
+      visitorHash: data.visitorHash, // For unique counting
+      ttl: Math.floor(Date.now() / 1000) + (365 * 24 * 60 * 60) // 1 year TTL
+    }
+  }));
   
   // Increment daily page view counter
   await docClient.send(new UpdateCommand({
@@ -47,48 +84,54 @@ async function trackPageView(data) {
 
   // Track unique visitor
   if (data.visitorHash) {
-  try {
-    await docClient.send(new PutCommand({
-      TableName: TABLE_NAME,
-      Item: {
-        pk: `VISITOR#${dateKey}`,
-        sk: data.visitorHash,
-        date: dateKey,
-        timestamp,
-        page: data.page || '/',
-        ttl: Math.floor(Date.now() / 1000) + (90 * 24 * 60 * 60) // 90 days TTL
-      },
-      ConditionExpression: 'attribute_not_exists(pk)'
-    }));
+    try {
+      await docClient.send(new PutCommand({
+        TableName: TABLE_NAME,
+        Item: {
+          pk: `VISITOR#${dateKey}`,
+          sk: data.visitorHash,
+          date: dateKey,
+          timestamp,
+          page: data.page || '/',
+          // Store full data for first visit of the day
+          ip: visitorInfo.ip,
+          userAgent: visitorInfo.userAgent,
+          language: visitorInfo.language,
+          country: visitorInfo.country,
+          deviceType: visitorInfo.deviceType,
+          ttl: Math.floor(Date.now() / 1000) + (90 * 24 * 60 * 60) // 90 days TTL
+        },
+        ConditionExpression: 'attribute_not_exists(pk)'
+      }));
 
-    // Only increment if new visitor (no error thrown)
-    await docClient.send(new UpdateCommand({
-      TableName: TABLE_NAME,
-      Key: {
-        pk: 'STATS',
-        sk: `DATE#${dateKey}`
-      },
-      UpdateExpression: 'ADD uniqueVisitors :inc',
-      ExpressionAttributeValues: {
-        ':inc': 1
+      // Only increment if new visitor (no error thrown)
+      await docClient.send(new UpdateCommand({
+        TableName: TABLE_NAME,
+        Key: {
+          pk: 'STATS',
+          sk: `DATE#${dateKey}`
+        },
+        UpdateExpression: 'ADD uniqueVisitors :inc',
+        ExpressionAttributeValues: {
+          ':inc': 1
+        }
+      }));
+    } catch (error) {
+      // Ignore if visitor already exists (ConditionExpression failed)
+      if (error.name !== 'ConditionalCheckFailedException') {
+        throw error;
       }
-    }));
-  } catch (error) {
-    // Ignore if visitor already exists (ConditionExpression failed)
-    if (error.name !== 'ConditionalCheckFailedException') {
-      throw error;
     }
   }
- }
 }
 
 // Track Quantum Fiber referral click
-async function trackQuantumFiberClick(data) {
+async function trackQuantumFiberClick(data, visitorInfo) {
   const dateKey = getDateKey();
   const timestamp = new Date().toISOString();
   const clickId = crypto.randomBytes(8).toString('hex');
 
-  // Store click event
+  // Store click event with full visitor data
   await docClient.send(new PutCommand({
     TableName: TABLE_NAME,
     Item: {
@@ -100,6 +143,12 @@ async function trackQuantumFiberClick(data) {
       page: data.page || '/',
       linkId: data.linkId || 'unknown',
       linkText: data.linkText || '',
+      // Full visitor data
+      ip: visitorInfo.ip,
+      userAgent: visitorInfo.userAgent,
+      language: visitorInfo.language,
+      country: visitorInfo.country,
+      deviceType: visitorInfo.deviceType,
       ttl: Math.floor(Date.now() / 1000) + (365 * 24 * 60 * 60) // 1 year TTL
     }
   }));
@@ -133,12 +182,12 @@ async function trackQuantumFiberClick(data) {
 }
 
 // Track Amazon affiliate click
-async function trackAmazonClick(data) {
+async function trackAmazonClick(data, visitorInfo) {
   const dateKey = getDateKey();
   const timestamp = new Date().toISOString();
   const clickId = crypto.randomBytes(8).toString('hex');
 
-  // Store click event
+  // Store click event with full visitor data
   await docClient.send(new PutCommand({
     TableName: TABLE_NAME,
     Item: {
@@ -149,6 +198,12 @@ async function trackAmazonClick(data) {
       visitorHash: data.visitorHash || 'unknown',
       page: data.page || '/',
       linkText: data.linkText || '',
+      // Full visitor data
+      ip: visitorInfo.ip,
+      userAgent: visitorInfo.userAgent,
+      language: visitorInfo.language,
+      country: visitorInfo.country,
+      deviceType: visitorInfo.deviceType,
       ttl: Math.floor(Date.now() / 1000) + (365 * 24 * 60 * 60) // 1 year TTL
     }
   }));
@@ -205,10 +260,9 @@ exports.handler = async (event) => {
     const body = JSON.parse(event.body || '{}');
     const eventType = body.event;
 
-    // Get visitor info
-    const ip = event.requestContext?.identity?.sourceIp || 'unknown';
-    const userAgent = event.requestContext?.identity?.userAgent || 'unknown';
-    const visitorHash = hashVisitor(ip, userAgent);
+    // Get visitor info from request
+    const visitorInfo = getVisitorInfo(event);
+    const visitorHash = hashVisitor(visitorInfo.ip, visitorInfo.userAgent);
 
     const data = {
       ...body,
@@ -218,13 +272,13 @@ exports.handler = async (event) => {
     // Route to appropriate handler
     switch (eventType) {
       case 'pageView':
-        await trackPageView(data);
+        await trackPageView(data, visitorInfo);
         break;
       case 'quantumFiberClick':
-        await trackQuantumFiberClick(data);
+        await trackQuantumFiberClick(data, visitorInfo);
         break;
       case 'amazonClick':
-        await trackAmazonClick(data);
+        await trackAmazonClick(data, visitorInfo);
         break;
       default:
         return {

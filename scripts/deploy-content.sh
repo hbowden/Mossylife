@@ -82,6 +82,14 @@ if [ -f "$TEMP_DIR/about/index.html" ]; then
         --metadata-directive REPLACE
 fi
 
+if [ -f "$TEMP_DIR/privacy/index.html" ]; then
+    aws s3 cp "$TEMP_DIR/privacy/index.html" "s3://$S3_BUCKET/privacy/index.html" \
+        --profile "$AWS_PROFILE" \
+        --content-type "text/html" \
+        --cache-control "public, max-age=3600" \
+        --metadata-directive REPLACE
+fi
+
 # Upload blog post
 aws s3 cp "$TEMP_DIR/blog/quantum-fiber-review/index.html" "s3://$S3_BUCKET/blog/quantum-fiber-review/index.html" \
     --profile "$AWS_PROFILE" \

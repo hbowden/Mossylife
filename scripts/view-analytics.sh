@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to view analytics data from DynamoDB
+# Enhanced Analytics Viewer - Shows detailed visitor data
 
 # AWS Profile (can be overridden with AWS_PROFILE env var)
 AWS_PROFILE="${AWS_PROFILE:-personal}"
@@ -10,6 +10,7 @@ export AWS_PROFILE
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Get script directory
@@ -26,10 +27,10 @@ if [ -z "$TABLE_NAME" ]; then
     exit 1
 fi
 
-echo "================================"
-echo "Quantum Fiber Review - Analytics"
+echo "========================================"
+echo "Mossy Life - Enhanced Analytics Dashboard"
 echo "Using AWS Profile: $AWS_PROFILE"
-echo "================================"
+echo "========================================"
 echo ""
 
 # Function to get date stats
@@ -107,7 +108,36 @@ aws dynamodb get-item \
     end' || echo "  No all-time data yet"
 
 echo ""
-echo -e "${BLUE}Recent Quantum Fiber Clicks:${NC}"
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+echo -e "${CYAN}     DETAILED VISITOR ANALYTICS${NC}"
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+echo ""
+
+echo -e "${BLUE}Recent Page Views (with full visitor data):${NC}"
+aws dynamodb query \
+    --profile "$AWS_PROFILE" \
+    --table-name "$TABLE_NAME" \
+    --key-condition-expression "pk = :pk" \
+    --expression-attribute-values '{":pk":{"S":"PAGEVIEW"}}' \
+    --limit 10 \
+    --scan-index-forward false \
+    --output json 2>/dev/null | jq -r '
+    if .Items | length > 0 then
+        .Items[] | 
+        "─────────────────────────────────",
+        "  Time: " + .timestamp.S,
+        "  Page: " + (.page.S // "/"),
+        "  IP: " + (.ip.S // "unknown"),
+        "  Country: " + (.country.S // "unknown"),
+        "  Device: " + (.deviceType.S // "unknown"),
+        "  Browser: " + (.userAgent.S // "unknown")[0:80],
+        "  Referrer: " + (.referrer.S // "direct")
+    else
+        "  No page views yet"
+    end' || echo "  No page views yet"
+
+echo ""
+echo -e "${BLUE}Recent Quantum Fiber Clicks (detailed):${NC}"
 aws dynamodb query \
     --profile "$AWS_PROFILE" \
     --table-name "$TABLE_NAME" \
@@ -118,13 +148,20 @@ aws dynamodb query \
     --output json 2>/dev/null | jq -r '
     if .Items | length > 0 then
         .Items[] | 
-        "  " + .timestamp.S + " - " + (.linkId.S // "unknown") + " - " + (.page.S // "/")
+        "─────────────────────────────────",
+        "  Time: " + .timestamp.S,
+        "  Page: " + (.page.S // "/"),
+        "  Link ID: " + (.linkId.S // "unknown"),
+        "  IP: " + (.ip.S // "unknown"),
+        "  Country: " + (.country.S // "unknown"),
+        "  Device: " + (.deviceType.S // "unknown"),
+        "  Browser: " + (.userAgent.S // "unknown")[0:80]
     else
         "  No Quantum Fiber clicks yet"
     end' || echo "  No Quantum Fiber clicks yet"
 
 echo ""
-echo -e "${BLUE}Recent Amazon Clicks:${NC}"
+echo -e "${BLUE}Recent Amazon Clicks (detailed):${NC}"
 aws dynamodb query \
     --profile "$AWS_PROFILE" \
     --table-name "$TABLE_NAME" \
@@ -135,15 +172,66 @@ aws dynamodb query \
     --output json 2>/dev/null | jq -r '
     if .Items | length > 0 then
         .Items[] | 
-        "  " + .timestamp.S + " - " + (.linkText.S // "unknown product") + " - " + (.page.S // "/")
+        "─────────────────────────────────",
+        "  Time: " + .timestamp.S,
+        "  Product: " + (.linkText.S // "unknown"),
+        "  Page: " + (.page.S // "/"),
+        "  IP: " + (.ip.S // "unknown"),
+        "  Country: " + (.country.S // "unknown"),
+        "  Device: " + (.deviceType.S // "unknown"),
+        "  Browser: " + (.userAgent.S // "unknown")[0:80]
     else
         "  No Amazon clicks yet"
     end' || echo "  No Amazon clicks yet"
 
 echo ""
-echo "================================"
+echo -e "${CYAN}═══════════════════════════════════════${NC}"
+echo ""
+
+echo -e "${YELLOW}Traffic by Country (Last 7 Days):${NC}"
+aws dynamodb query \
+    --profile "$AWS_PROFILE" \
+    --table-name "$TABLE_NAME" \
+    --key-condition-expression "pk = :pk" \
+    --expression-attribute-values '{":pk":{"S":"PAGEVIEW"}}' \
+    --limit 100 \
+    --scan-index-forward false \
+    --output json 2>/dev/null | jq -r '
+    if .Items | length > 0 then
+        .Items | group_by(.country.S) | 
+        map({country: .[0].country.S, count: length}) | 
+        sort_by(.count) | reverse | .[] |
+        "  " + .country + ": " + (.count | tostring) + " views"
+    else
+        "  No data available"
+    end' || echo "  No data available"
+
+echo ""
+echo -e "${YELLOW}Traffic by Device Type (Last 7 Days):${NC}"
+aws dynamodb query \
+    --profile "$AWS_PROFILE" \
+    --table-name "$TABLE_NAME" \
+    --key-condition-expression "pk = :pk" \
+    --expression-attribute-values '{":pk":{"S":"PAGEVIEW"}}' \
+    --limit 100 \
+    --scan-index-forward false \
+    --output json 2>/dev/null | jq -r '
+    if .Items | length > 0 then
+        .Items | group_by(.deviceType.S) | 
+        map({device: .[0].deviceType.S, count: length}) | 
+        sort_by(.count) | reverse | .[] |
+        "  " + .device + ": " + (.count | tostring) + " views"
+    else
+        "  No data available"
+    end' || echo "  No data available"
+
+echo ""
+echo "========================================"
 echo ""
 echo "To view all data in DynamoDB Console:"
 echo "https://console.aws.amazon.com/dynamodbv2/home?region=us-west-2#tables"
 echo ""
 echo "Table name: $TABLE_NAME"
+echo ""
+echo "To export detailed visitor data to CSV:"
+echo "  ./scripts/export-analytics.sh"
