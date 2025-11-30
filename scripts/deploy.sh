@@ -2,7 +2,7 @@
 set -e
 
 echo "================================"
-echo "Mossy Life - Full Deploy"
+echo "Mossy Life - Full Deploy (Flat Structure)"
 echo "================================"
 echo ""
 
@@ -12,7 +12,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# AWS Profile (can be overridden with AWS_PROFILE env var)
+# AWS Profile
 AWS_PROFILE="${AWS_PROFILE:-personal}"
 export AWS_PROFILE
 
@@ -91,55 +91,19 @@ echo ""
 
 echo -e "${YELLOW}Step 4: Uploading to S3...${NC}"
 
-# Upload home page
-if [ -f "$TEMP_DIR/index.html" ]; then
-    aws s3 cp "$TEMP_DIR/index.html" "s3://$S3_BUCKET/index.html" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/html" \
-        --cache-control "public, max-age=3600" \
-        --metadata-directive REPLACE
-fi
-
-# Upload about page
-if [ -f "$TEMP_DIR/about/index.html" ]; then
-    aws s3 cp "$TEMP_DIR/about/index.html" "s3://$S3_BUCKET/about/index.html" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/html" \
-        --cache-control "public, max-age=3600" \
-        --metadata-directive REPLACE
-fi
-
-# Upload privacy page
-if [ -f "$TEMP_DIR/privacy/index.html" ]; then
-    aws s3 cp "$TEMP_DIR/privacy/index.html" "s3://$S3_BUCKET/privacy/index.html" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/html" \
-        --cache-control "public, max-age=3600" \
-        --metadata-directive REPLACE
-fi
-
-# Upload blog post
-if [ -f "$TEMP_DIR/blog/quantum-fiber-review/index.html" ]; then
-    aws s3 cp "$TEMP_DIR/blog/quantum-fiber-review/index.html" "s3://$S3_BUCKET/blog/quantum-fiber-review/index.html" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/html" \
-        --cache-control "public, max-age=3600" \
-        --metadata-directive REPLACE
-fi
-
-# Upload recipe pages
-if [ -d "$TEMP_DIR/recipes" ]; then
-    echo -e "${YELLOW}Uploading recipe pages...${NC}"
-    find "$TEMP_DIR/recipes" -name "index.html" | while read -r recipe_file; do
-        relative_path="${recipe_file#$TEMP_DIR/recipes/}"
-        echo "  Uploading recipes/$relative_path"
-        aws s3 cp "$recipe_file" "s3://$S3_BUCKET/recipes/$relative_path" \
+# Upload all HTML files
+echo -e "${YELLOW}Uploading HTML files...${NC}"
+for html_file in "$TEMP_DIR"/*.html; do
+    if [ -f "$html_file" ]; then
+        filename=$(basename "$html_file")
+        echo "  Uploading $filename"
+        aws s3 cp "$html_file" "s3://$S3_BUCKET/$filename" \
             --profile "$AWS_PROFILE" \
             --content-type "text/html" \
             --cache-control "public, max-age=3600" \
             --metadata-directive REPLACE
-    done
-fi
+    fi
+done
 
 # Upload shared CSS
 if [ -f "$TEMP_DIR/shared/css/main.css" ]; then
@@ -177,7 +141,7 @@ if [ -f "$TEMP_DIR/robots.txt" ]; then
         --cache-control "public, max-age=86400"
 fi
 
-# Create sitemap.xml with all pages
+# Create sitemap.xml with flat structure
 cat > "$TEMP_DIR/sitemap.xml" << 'SITEMAP_EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -188,31 +152,43 @@ cat > "$TEMP_DIR/sitemap.xml" << 'SITEMAP_EOF'
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/blog/quantum-fiber-review/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/blog-quantum-fiber-review.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipes/cultured-butter/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipes.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipes/pie-crust/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipe-cultured-butter.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/about/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipe-pie-dough.html</loc>
+    <lastmod>DATE_PLACEHOLDER</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipe-shio-koji.html</loc>
+    <lastmod>DATE_PLACEHOLDER</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/about.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/privacy/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/privacy.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -220,7 +196,7 @@ cat > "$TEMP_DIR/sitemap.xml" << 'SITEMAP_EOF'
 </urlset>
 SITEMAP_EOF
 
-# Replace placeholders (macOS compatible)
+# Replace placeholders
 sed -i.bak "s|CLOUDFRONT_URL_PLACEHOLDER|$CLOUDFRONT_URL|g" "$TEMP_DIR/sitemap.xml"
 sed -i.bak "s|DATE_PLACEHOLDER|$(date +%Y-%m-%d)|g" "$TEMP_DIR/sitemap.xml"
 rm -f "$TEMP_DIR/sitemap.xml.bak"
@@ -255,10 +231,10 @@ echo -e "${GREEN}$CLOUDFRONT_URL${NC}"
 echo ""
 echo "Pages deployed:"
 echo "  - Home: $CLOUDFRONT_URL/"
-echo "  - Blog: $CLOUDFRONT_URL/blog/quantum-fiber-review/"
-echo "  - Recipe: $CLOUDFRONT_URL/recipes/cultured-butter/"
-echo "  - About: $CLOUDFRONT_URL/about/"
-echo "  - Privacy: $CLOUDFRONT_URL/privacy/"
+echo "  - Blog: $CLOUDFRONT_URL/blog-quantum-fiber-review.html"
+echo "  - Recipes: $CLOUDFRONT_URL/recipes.html"
+echo "  - About: $CLOUDFRONT_URL/about.html"
+echo "  - Privacy: $CLOUDFRONT_URL/privacy.html"
 echo ""
 echo "API Gateway Endpoint:"
 echo "$API_GATEWAY_URL"

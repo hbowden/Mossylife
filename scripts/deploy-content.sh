@@ -2,7 +2,7 @@
 set -e
 
 echo "================================"
-echo "Mossy Life - Content Deploy"
+echo "Mossy Life - Content Deploy (Flat Structure)"
 echo "================================"
 echo ""
 
@@ -65,53 +65,28 @@ echo -e "${YELLOW}Processing analytics.js...${NC}"
 sed -i.bak "s|API_GATEWAY_URL_PLACEHOLDER|$API_GATEWAY_URL|g" "$TEMP_DIR/shared/js/analytics.js"
 rm -f "$TEMP_DIR/shared/js/analytics.js.bak"
 
-echo -e "${YELLOW}Uploading files to S3...${NC}"
+echo -e "${YELLOW}Uploading HTML files to S3...${NC}"
 
-# Upload home page (index.html)
-aws s3 cp "$TEMP_DIR/index.html" "s3://$S3_BUCKET/index.html" \
-    --profile "$AWS_PROFILE" \
-    --content-type "text/html" \
-    --cache-control "public, max-age=3600" \
-    --metadata-directive REPLACE
-
-# Upload about page
-if [ -f "$TEMP_DIR/about/index.html" ]; then
-    aws s3 cp "$TEMP_DIR/about/index.html" "s3://$S3_BUCKET/about/index.html" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/html" \
-        --cache-control "public, max-age=3600" \
-        --metadata-directive REPLACE
-fi
-
-# Upload privacy page
-if [ -f "$TEMP_DIR/privacy/index.html" ]; then
-    aws s3 cp "$TEMP_DIR/privacy/index.html" "s3://$S3_BUCKET/privacy/index.html" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/html" \
-        --cache-control "public, max-age=3600" \
-        --metadata-directive REPLACE
-fi
-
-# Upload blog post
-aws s3 cp "$TEMP_DIR/blog/quantum-fiber-review/index.html" "s3://$S3_BUCKET/blog/quantum-fiber-review/index.html" \
-    --profile "$AWS_PROFILE" \
-    --content-type "text/html" \
-    --cache-control "public, max-age=3600" \
-    --metadata-directive REPLACE
-
-# Upload recipe pages
-if [ -d "$TEMP_DIR/recipes" ]; then
-    echo -e "${YELLOW}Uploading recipe pages...${NC}"
-    find "$TEMP_DIR/recipes" -name "index.html" | while read -r recipe_file; do
-        # Get the relative path from recipes directory
-        relative_path="${recipe_file#$TEMP_DIR/recipes/}"
-        echo "  Uploading recipes/$relative_path"
-        aws s3 cp "$recipe_file" "s3://$S3_BUCKET/recipes/$relative_path" \
+# Upload all HTML files from root
+for html_file in "$TEMP_DIR"/*.html; do
+    if [ -f "$html_file" ]; then
+        filename=$(basename "$html_file")
+        echo "  Uploading $filename"
+        aws s3 cp "$html_file" "s3://$S3_BUCKET/$filename" \
             --profile "$AWS_PROFILE" \
             --content-type "text/html" \
             --cache-control "public, max-age=3600" \
             --metadata-directive REPLACE
-    done
+    fi
+done
+
+# Upload shared CSS
+if [ -f "$TEMP_DIR/shared/css/main.css" ]; then
+    aws s3 cp "$TEMP_DIR/shared/css/main.css" "s3://$S3_BUCKET/shared/css/main.css" \
+        --profile "$AWS_PROFILE" \
+        --content-type "text/css" \
+        --cache-control "public, max-age=86400" \
+        --metadata-directive REPLACE
 fi
 
 # Upload shared JS
@@ -120,15 +95,6 @@ aws s3 cp "$TEMP_DIR/shared/js/analytics.js" "s3://$S3_BUCKET/shared/js/analytic
     --content-type "application/javascript" \
     --cache-control "public, max-age=86400" \
     --metadata-directive REPLACE
-
-# Upload shared CSS if it exists
-if [ -f "$TEMP_DIR/shared/css/main.css" ]; then
-    aws s3 cp "$TEMP_DIR/shared/css/main.css" "s3://$S3_BUCKET/shared/css/main.css" \
-        --profile "$AWS_PROFILE" \
-        --content-type "text/css" \
-        --cache-control "public, max-age=86400" \
-        --metadata-directive REPLACE
-fi
 
 # Upload images if they exist
 if [ -d "$TEMP_DIR/images" ] && [ "$(ls -A $TEMP_DIR/images 2>/dev/null)" ]; then
@@ -139,7 +105,7 @@ if [ -d "$TEMP_DIR/images" ] && [ "$(ls -A $TEMP_DIR/images 2>/dev/null)" ]; the
         --exclude "*.html"
 fi
 
-# Upload robots.txt if it exists
+# Upload robots.txt
 if [ -f "$TEMP_DIR/robots.txt" ]; then
     sed "s|https://mossylife.com|$CLOUDFRONT_URL|g" "$TEMP_DIR/robots.txt" > "$TEMP_DIR/robots_processed.txt"
     aws s3 cp "$TEMP_DIR/robots_processed.txt" "s3://$S3_BUCKET/robots.txt" \
@@ -148,7 +114,7 @@ if [ -f "$TEMP_DIR/robots.txt" ]; then
         --cache-control "public, max-age=86400"
 fi
 
-# Update sitemap with current date and all pages
+# Create sitemap.xml with flat structure URLs
 cat > "$TEMP_DIR/sitemap.xml" << 'SITEMAP_EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -159,31 +125,43 @@ cat > "$TEMP_DIR/sitemap.xml" << 'SITEMAP_EOF'
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/blog/quantum-fiber-review/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/blog-quantum-fiber-review.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipes/cultured-butter/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipes.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipes/pie-crust/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipe-cultured-butter.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/about/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipe-pie-dough.html</loc>
+    <lastmod>DATE_PLACEHOLDER</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/recipe-shio-koji.html</loc>
+    <lastmod>DATE_PLACEHOLDER</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/about.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>CLOUDFRONT_URL_PLACEHOLDER/privacy/</loc>
+    <loc>CLOUDFRONT_URL_PLACEHOLDER/privacy.html</loc>
     <lastmod>DATE_PLACEHOLDER</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
@@ -227,10 +205,10 @@ echo -e "${GREEN}$CLOUDFRONT_URL${NC}"
 echo ""
 echo "Pages deployed:"
 echo "  - Home: $CLOUDFRONT_URL/"
-echo "  - Blog: $CLOUDFRONT_URL/blog/quantum-fiber-review/"
-echo "  - Recipe: $CLOUDFRONT_URL/recipes/cultured-butter/"
-echo "  - About: $CLOUDFRONT_URL/about/"
-echo "  - Privacy: $CLOUDFRONT_URL/privacy/"
+echo "  - Blog: $CLOUDFRONT_URL/blog-quantum-fiber-review.html"
+echo "  - Recipes: $CLOUDFRONT_URL/recipes.html"
+echo "  - About: $CLOUDFRONT_URL/about.html"
+echo "  - Privacy: $CLOUDFRONT_URL/privacy.html"
 echo ""
 echo -e "${YELLOW}Note: CloudFront cache invalidation may take 1-3 minutes.${NC}"
 echo ""
