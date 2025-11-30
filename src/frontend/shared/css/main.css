@@ -1,4 +1,4 @@
-/* Mossy Life - PNW Forest Theme */
+/* Mossy Life - PNW Forest Meets Mario Block Theme */
 
 * {
     margin: 0;
@@ -7,36 +7,42 @@
 }
 
 :root {
-    /* Mossy Forest Colors */
-    --forest-dark: #1a4d2e;
-    --forest-med: #2d5016;
-    --moss-green: #52b788;
-    --moss-light: #90be6d;
-    --earth-brown: #8b5a3c;
-    --mushroom: #dda15e;
-    --cream: #fef9ef;
-    --fog: #d8e2dc;
-    --sky: #4ea8de;
-    --bark: #6d4c3d;
+    /* Snowy Mountain Palette - Inspired by PNW Winter */
+    --snow-white: #f8f9fa;
+    --frost-white: #e9ecef;
+    --ice-blue: #adb5bd;
+    --sky-blue: #6c757d;
+    --mountain-grey: #495057;
+    --storm-grey: #343a40;
+    --deep-grey: #212529;
+    --powder-blue: #d4e3f0;
+    --glacier-blue: #b8cfe5;
+    --steel-blue: #8ba9c4;
+    --shadow-blue: #5a7a99;
+    
+    /* Accent Colors */
+    --evergreen: #2d5016;
+    --pine-shadow: #1a4d2e;
     
     /* Functional Colors */
-    --primary: var(--moss-green);
-    --secondary: var(--forest-dark);
-    --accent: var(--mushroom);
-    --success: var(--moss-light);
-    --warning: #f4a261;
-    --text: #2d3a2e;
-    --text-light: #5a6c57;
-    --bg: var(--cream);
-    --bg-light: #f8f6f0;
-    --border: #c9d5c0;
+    --primary: var(--steel-blue);
+    --secondary: var(--mountain-grey);
+    --accent: var(--glacier-blue);
+    --success: var(--powder-blue);
+    --warning: var(--ice-blue);
+    --text: var(--deep-grey);
+    --text-light: var(--sky-blue);
+    --bg: var(--snow-white);
+    --bg-light: #ffffff;
+    --border: var(--storm-grey);
 }
 
 body {
-    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Fredoka', 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     line-height: 1.7;
     color: var(--text);
-    background: var(--bg);
+    background: linear-gradient(180deg, var(--powder-blue) 0%, var(--glacier-blue) 50%, var(--steel-blue) 100%);
+    background-attachment: fixed;
 }
 
 .container {
@@ -45,96 +51,112 @@ body {
     padding: .25rem 1.5rem;
 }
 
-/* Playful Header with Forest Theme */
+/* Winter Mountain Header with Mt. Hood Background */
 header {
-    color: var(--moss-green);
+    background: 
+        linear-gradient(180deg, rgba(73, 80, 87, 0.85) 0%, rgba(33, 37, 41, 0.9) 100%),
+        url('/images/mt-hood-background.jpg') center center / cover no-repeat;
+    color: white;
     padding: 3rem 0 2.5rem;
     position: relative;
     overflow: hidden;
+    border-bottom: 6px solid var(--steel-blue);
+    box-shadow: 0 8px 0 var(--shadow-blue), 
+                0 8px 20px rgba(0,0,0,0.3);
 }
 
-
-
-/* Subtle tree silhouettes in header */
+/* Snowy tree and snowflake accents */
 header::before {
-    content: '🌲';
+    content: '❄️';
     position: absolute;
-    bottom: 10px;
-    left: 5%;
-    font-size: 2rem;
-    opacity: 0.3;
+    bottom: 20px;
+    left: 10%;
+    font-size: 2.5rem;
+    opacity: 0.4;
 }
 
 header::after {
-    content: '🌲 🌲';
+    content: '🏔️';
     position: absolute;
-    bottom: 10px;
-    right: 5%;
-    font-size: 1.5rem;
-    opacity: 0.25;
+    bottom: 20px;
+    right: 10%;
+    font-size: 2rem;
+    opacity: 0.4;
 }
 
 h1 {
-    font-family: 'Fredoka', 'Quicksand', sans-serif;
-    font-size: 2.5rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 3rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
     line-height: 1.2;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    text-shadow: 
+        4px 4px 0 rgba(0,0,0,0.3),
+        -2px -2px 0 rgba(255,255,255,0.3);
     position: relative;
     z-index: 1;
+    color: #fff;
+    letter-spacing: 2px;
+    transform: skew(-2deg);
 }
 
-/* h1 a {
+h1 a {
     color: white;
     text-decoration: none;
-    transition: color 0.3s ease;
-} */
+    transition: all 0.3s ease;
+    display: inline-block;
+}
 
 h1 a:hover {
-    color: var(--moss-light);
+    transform: scale(1.1) rotate(-2deg);
+    text-shadow: 
+        6px 6px 0 rgba(0,0,0,0.3),
+        -3px -3px 0 var(--coin-gold);
 }
 
 .subtitle {
-    font-size: 1.125rem;
-    opacity: 0.95;
-    font-weight: 400;
+    font-size: 1.25rem;
+    font-weight: 600;
     position: relative;
     z-index: 1;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Typography with organic feel */
+/* Typography with Mario-style bold outlines */
 h2 {
-    font-family: 'Fredoka', 'Quicksand', sans-serif;
-    font-size: 2rem;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 2.25rem;
     font-weight: 700;
     margin: 2.5rem 0 1rem;
-    color: var(--forest-dark);
+    color: var(--steel-blue);
     line-height: 1.3;
     position: relative;
-    padding-left: 1rem;
+    padding-left: 1.5rem;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    transform: skew(-2deg);
 }
 
 h2::before {
-    content: '🌿';
+    content: '❄️';
     position: absolute;
     left: -0.5rem;
-    opacity: 0.6;
 }
 
 h3 {
-    font-family: 'Quicksand', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
     margin: 2rem 0 0.75rem;
-    color: var(--forest-med);
+    color: var(--mountain-grey);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
 }
 
 h4 {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.35rem;
+    font-weight: 700;
     margin: 1.5rem 0 0.5rem;
-    color: var(--forest-med);
+    color: var(--sky-blue);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.08);
 }
 
 p {
@@ -144,120 +166,207 @@ p {
 }
 
 strong {
-    font-weight: 600;
-    color: var(--forest-dark);
+    font-weight: 700;
+    color: var(--steel-blue);
 }
 
-/* Playful CTA Buttons */
+/* Ice Block Style CTA Buttons */
 .cta-button {
     display: inline-block;
-    background: var(--moss-green);
+    background: linear-gradient(180deg, var(--glacier-blue) 0%, var(--steel-blue) 100%);
     color: white;
-    padding: 1rem 2rem;
-    border-radius: 2rem;
+    padding: 1.25rem 2.5rem;
+    border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(82, 183, 136, 0.3);
+    box-shadow: 
+        0 6px 0 var(--shadow-blue),
+        0 8px 20px rgba(0,0,0,0.3);
     text-align: center;
-    border: 3px solid transparent;
+    border: 4px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
 }
 
 .cta-button:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 20px rgba(82, 183, 136, 0.4);
-    background: var(--moss-light);
-    border-color: var(--forest-dark);
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 
+        0 10px 0 var(--shadow-blue),
+        0 12px 30px rgba(0,0,0,0.4);
+    background: linear-gradient(180deg, var(--powder-blue) 0%, var(--glacier-blue) 100%);
+}
+
+.cta-button:active {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 4px 0 var(--shadow-blue),
+        0 6px 15px rgba(0,0,0,0.3);
 }
 
 .cta-box {
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-    border: 3px solid var(--moss-green);
-    border-radius: 1.5rem;
-    padding: 2rem;
+    background: linear-gradient(135deg, var(--snow-white) 0%, var(--frost-white) 100%);
+    border: 6px solid var(--glacier-blue);
+    border-radius: 30px;
+    padding: 2.5rem;
     margin: 2rem 0;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 
+        0 8px 0 var(--steel-blue),
+        0 10px 30px rgba(0,0,0,0.2);
     position: relative;
 }
 
 .cta-box::before {
-    content: '🍄';
+    content: '⛷️';
     position: absolute;
-    top: -15px;
-    left: 20px;
-    font-size: 1.5rem;
+    top: -25px;
+    left: 30px;
+    font-size: 2.5rem;
 }
 
-/* Content Boxes with organic shapes */
+.cta-box::after {
+    content: '❄️';
+    position: absolute;
+    top: -25px;
+    right: 30px;
+    font-size: 2rem;
+}
+
+/* Ice Block Style Content Boxes */
 .highlight-box {
-    background: var(--bg-light);
-    border-left: 6px solid var(--moss-green);
-    border-radius: 1rem;
-    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--powder-blue) 0%, #c8dff5 50%, var(--powder-blue) 100%);
+    border: 6px solid var(--steel-blue);
+    border-radius: 20px;
+    padding: 2rem;
     margin: 1.5rem 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 
+        0 6px 0 var(--shadow-blue),
+        0 8px 20px rgba(0,0,0,0.2);
+    position: relative;
 }
 
+.highlight-box::before {
+    content: '💎';
+    position: absolute;
+    top: 20px;
+    right: 70px;
+    font-size: 1.5rem;
+    opacity: 0.4;
+}
+
+.highlight-box::after {
+    content: '❄️';
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+/* Storm Cloud Warning Boxes */
 .warning-box {
-    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
-    border-left: 6px solid var(--warning);
-    border-radius: 1rem;
-    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--ice-blue) 0%, var(--sky-blue) 50%, var(--ice-blue) 100%);
+    border: 6px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
     margin: 1.5rem 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 
+        0 6px 0 var(--mountain-grey),
+        0 8px 20px rgba(0,0,0,0.2);
     position: relative;
+    color: white;
+}
+
+.warning-box strong {
+    color: white;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 
 .warning-box::before {
     content: '⚠️';
     position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 1.25rem;
-    opacity: 0.5;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
 }
 
-/* Stats Grid with playful cards */
+/* Block-Style Stats Grid */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
     margin: 2rem 0;
 }
 
 .stat-card {
-    background: linear-gradient(135deg, var(--cream) 0%, var(--fog) 100%);
-    border: 2px solid var(--border);
-    border-radius: 1.5rem;
-    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--mountain-grey) 0%, var(--sky-blue) 50%, var(--mountain-grey) 100%);
+    border: 6px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
     text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 
+        0 6px 0 var(--storm-grey),
+        0 8px 20px rgba(0,0,0,0.2);
+    position: relative;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px) rotate(1deg);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    border-color: var(--moss-green);
+/* Glacier blue variant for special stats */
+.stat-card:nth-child(2) {
+    background: linear-gradient(135deg, var(--glacier-blue) 0%, var(--steel-blue) 50%, var(--glacier-blue) 100%);
+    box-shadow: 
+        0 6px 0 var(--shadow-blue),
+        0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Frost white variant for alternate stats */
+.stat-card:nth-child(3) {
+    background: linear-gradient(135deg, var(--frost-white) 0%, var(--powder-blue) 50%, var(--frost-white) 100%);
+    box-shadow: 
+        0 6px 0 var(--ice-blue),
+        0 8px 20px rgba(0,0,0,0.2);
+}
+
+.stat-card:nth-child(3) .stat-value,
+.stat-card:nth-child(3) .stat-label {
+    color: var(--steel-blue);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 12px;
+    pointer-events: none;
 }
 
 .stat-value {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    color: var(--moss-green);
+    color: white;
     display: block;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
 }
 
 .stat-label {
-    font-size: 0.875rem;
-    color: var(--text-light);
-    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    font-weight: 700;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Lists with tree bullet points */
+/* Pixelated Lists */
 ul, ol {
     margin: 1.25rem 0 1.25rem 2rem;
     color: var(--text);
@@ -266,9 +375,10 @@ ul, ol {
 li {
     margin-bottom: 0.75rem;
     line-height: 1.6;
+    font-weight: 500;
 }
 
-/* Pro/Con Grid with organic styling */
+/* Winter Pros/Cons Grid */
 .pro-con-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -277,39 +387,49 @@ li {
 }
 
 .pros, .cons {
-    background: var(--bg-light);
-    padding: 2rem;
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease;
-}
-
-.pros:hover, .cons:hover {
-    transform: translateY(-5px);
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 
+        0 8px 0 rgba(0,0,0,0.2),
+        0 10px 25px rgba(0,0,0,0.3);
+    border: 6px solid var(--border);
 }
 
 .pros {
-    border-top: 6px solid var(--moss-light);
-    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    background: linear-gradient(135deg, var(--glacier-blue) 0%, var(--steel-blue) 50%, var(--glacier-blue) 100%);
+    color: white;
+}
+
+.pros::before {
+    content: '⛷️';
+    font-size: 3rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .cons {
-    border-top: 6px solid var(--warning);
-    background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%);
+    background: linear-gradient(135deg, var(--mountain-grey) 0%, var(--storm-grey) 50%, var(--mountain-grey) 100%);
+    color: white;
 }
 
-.pros h3 {
-    color: var(--forest-dark);
+.cons::before {
+    content: '🌨️';
+    font-size: 3rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.pros h3, .cons h3 {
+    color: white;
     margin-top: 0;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    text-align: center;
 }
 
 .pros h3::before {
     content: '✅ ';
-}
-
-.cons h3 {
-    color: var(--earth-brown);
-    margin-top: 0;
 }
 
 .cons h3::before {
@@ -321,75 +441,106 @@ li {
     list-style: none;
 }
 
+.pros li {
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
+.cons li {
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+}
+
 .pros li::before {
-    content: "🌲 ";
+    content: "❄️ ";
     margin-right: 0.5rem;
 }
 
 .cons li::before {
-    content: "🍂 ";
+    content: "💨 ";
     margin-right: 0.5rem;
 }
 
-/* Images with organic borders */
+/* Pixel-Perfect Images */
 img {
     max-width: 100%;
     height: auto;
-    border-radius: 1.5rem;
+    border-radius: 20px;
     margin: 1.5rem 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 
+        0 8px 0 rgba(0,0,0,0.2),
+        0 10px 30px rgba(0,0,0,0.3);
+    border: 6px solid #2b2b2b;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }
 
-/* Code blocks with earthy tone */
+/* Winter Terminal Code Blocks */
 code {
-    background: var(--fog);
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.5rem;
-    font-family: 'Monaco', 'Courier New', monospace;
-    font-size: 0.9rem;
-    color: var(--forest-dark);
-    border: 1px solid var(--border);
-}
-
-/* Links with forest colors */
-a {
-    color: var(--moss-green);
-    text-decoration: none;
-    transition: all 0.2s;
+    background: var(--storm-grey);
+    color: var(--powder-blue);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    border: 3px solid var(--steel-blue);
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
     font-weight: 600;
 }
 
-a:hover {
-    color: var(--forest-dark);
-    text-decoration: underline;
+/* Ice Blue Links */
+a {
+    color: var(--steel-blue);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-weight: 700;
+    position: relative;
 }
 
-/* Footer with forest floor feel */
+a:hover {
+    color: var(--glacier-blue);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* Winter Mountain Footer */
 footer {
-    background: linear-gradient(180deg, var(--forest-med) 0%, var(--forest-dark) 100%);
-    color: rgba(255,255,255,0.9);
-    padding: 2.5rem 0;
+    background: linear-gradient(180deg, var(--mountain-grey) 0%, var(--storm-grey) 100%);
+    color: white;
+    padding: 3rem 0;
     margin-top: 4rem;
     text-align: center;
-    font-size: 0.875rem;
+    font-size: 1rem;
     position: relative;
-    border-top: 4px solid var(--moss-green);
+    border-top: 8px solid var(--steel-blue);
+    box-shadow: 
+        inset 0 8px 0 rgba(255,255,255,0.1),
+        inset 0 -8px 0 rgba(0,0,0,0.3);
 }
 
 footer::before {
-    content: '🌿 🍄 🌲';
+    content: '❄️ 🏔️ ❄️';
     display: block;
     margin-bottom: 1rem;
-    font-size: 1.25rem;
-    opacity: 0.6;
+    font-size: 2rem;
 }
 
 footer p {
-    color: rgba(255,255,255,0.9);
+    color: white;
     margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    font-weight: 600;
 }
 
-/* Main Content */
+footer a {
+    color: var(--powder-blue);
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* Main Content with Cloud Background */
 main {
     padding: 3rem 0;
 }
@@ -397,26 +548,48 @@ main {
 article {
     font-size: 1.0625rem;
     background: white;
-    padding: 2.5rem;
-    border-radius: 2rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 3rem;
+    border-radius: 30px;
+    box-shadow: 
+        0 10px 0 rgba(0,0,0,0.1),
+        0 12px 40px rgba(0,0,0,0.3);
+    border: 6px solid #2b2b2b;
+    position: relative;
 }
 
-/* Blog Post Cards (for home page) */
-.post-card {
+article::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 40px;
     background: white;
-    border: 3px solid var(--border);
-    border-radius: 1.5rem;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-radius: 50% 50% 0 0;
+    border: 6px solid #2b2b2b;
+    border-bottom: none;
 }
 
-.post-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    border-color: var(--moss-green);
+/* Block-Style Blog Post Cards */
+.post-card {
+    background: linear-gradient(135deg, white 0%, var(--frost-white) 100%);
+    border: 6px solid var(--border);
+    border-radius: 25px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 
+        0 8px 0 rgba(0,0,0,0.1),
+        0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.post-card::before {
+    content: '📄';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
 }
 
 .post-card h3 {
@@ -424,16 +597,17 @@ article {
 }
 
 .post-card h3 a {
-    color: var(--forest-dark);
+    color: var(--steel-blue);
     text-decoration: none;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.08);
 }
 
 .post-card h3 a:hover {
-    color: var(--moss-green);
+    color: var(--glacier-blue);
 }
 
 .post-excerpt {
-    color: var(--text-light);
+    color: var(--text);
     margin-bottom: 1rem;
     line-height: 1.6;
 }
@@ -441,34 +615,35 @@ article {
 .post-meta {
     display: flex;
     gap: 1rem;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     color: var(--text-light);
-    font-weight: 600;
+    font-weight: 700;
+    flex-wrap: wrap;
 }
 
-/* Empty State */
+/* Winter Empty State */
 .empty-state {
     text-align: center;
-    padding: 3rem 0;
-    color: var(--text-light);
+    padding: 4rem 0;
+    color: var(--text);
+    font-weight: 700;
 }
 
 .empty-state::before {
-    content: '🌱';
+    content: '❄️';
     display: block;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     h1 {
-        font-size: 2rem;
+        font-size: 2.25rem;
     }
     
     h2 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
     
     .stats-grid {
@@ -480,7 +655,7 @@ article {
     }
     
     article {
-        padding: 1.5rem;
+        padding: 2rem;
     }
 }
 
@@ -490,7 +665,7 @@ article {
     }
     
     h1 {
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
     
     .stats-grid {
@@ -498,24 +673,22 @@ article {
     }
     
     article {
-        padding: 1.25rem;
-        border-radius: 1.5rem;
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+    
+    .cta-button {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
     }
 }
 
-/* Fun loading animation for images */
-img {
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* Add subtle texture to body */
+/* Subtle Winter Sky Background */
 body {
     background-image: 
-        radial-gradient(circle at 20% 50%, rgba(82, 183, 136, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(144, 190, 109, 0.03) 0%, transparent 50%);
+        linear-gradient(180deg, var(--powder-blue) 0%, var(--glacier-blue) 50%, var(--steel-blue) 100%),
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.2) 0%, transparent 20%),
+        radial-gradient(circle at 80% 50%, rgba(255,255,255,0.15) 0%, transparent 15%);
+    background-size: 100% 100%, 200px 100px, 250px 120px;
+    background-repeat: no-repeat, repeat-x, repeat-x;
 }
